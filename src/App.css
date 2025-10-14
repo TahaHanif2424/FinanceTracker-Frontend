@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+@theme {
+  --color-career-darkGreen: rgb(51, 78, 103);
+  --color-career-mediumGreen: rgb(114, 143, 122);
+  --color-career-lightGray: rgb(244, 244, 239);
+}
