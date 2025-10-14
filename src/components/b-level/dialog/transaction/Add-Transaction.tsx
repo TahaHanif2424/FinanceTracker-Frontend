@@ -209,7 +209,7 @@ const AddTransactionDialog: React.FC = () => {
             </label>
             <TextArea
               name="description"
-              value={formik.values.description}
+              value={formik.values.description || ""}
               onChange={formik.handleChange}
               placeholder="Add notes about this transaction..."
               rows={3}

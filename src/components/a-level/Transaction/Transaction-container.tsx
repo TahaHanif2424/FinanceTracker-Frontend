@@ -69,7 +69,7 @@ const TransactionContainer: React.FC<TransactionContainerProps> = ({
     // Apply search filter
     if (searchQuery) {
       filtered = filtered.filter(
-        (transaction) =>
+        (transaction: Transaction) =>
           transaction.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           transaction.description
             ?.toLowerCase()
@@ -79,7 +79,7 @@ const TransactionContainer: React.FC<TransactionContainerProps> = ({
 
     // Apply date range filter
     if (startDate && endDate) {
-      filtered = filtered.filter((transaction) => {
+      filtered = filtered.filter((transaction: Transaction) => {
         const transDate = new Date(transaction.fullDate);
         const start = new Date(startDate);
         const end = new Date(endDate);
@@ -106,9 +106,9 @@ const TransactionContainer: React.FC<TransactionContainerProps> = ({
   const formatDateRange = () => {
     if (filteredTransactions.length === 0) return "";
 
-    const dates = filteredTransactions.map((t) => new Date(t.fullDate));
-    const minDate = new Date(Math.min(...dates.map((d) => d.getTime())));
-    const maxDate = new Date(Math.max(...dates.map((d) => d.getTime())));
+    const dates = filteredTransactions.map((t: Transaction) => new Date(t.fullDate));
+    const minDate = new Date(Math.min(...dates.map((d: Date) => d.getTime())));
+    const maxDate = new Date(Math.max(...dates.map((d: Date) => d.getTime())));
 
     return `${minDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })} – ${maxDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}`;
   };

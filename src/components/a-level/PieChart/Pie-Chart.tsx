@@ -31,7 +31,7 @@ export default function ExpensePieChart() {
             fill="#8884d8"
             dataKey="value"
           >
-            {data.map((entry, index) => (
+            {data.map((_entry, index) => (
               <Cell
                 key={`cell-${index}`}
                 fill={COLORS[index % COLORS.length]}
@@ -54,7 +54,7 @@ export default function ExpensePieChart() {
             wrapperStyle={{
               paddingLeft: "20px",
             }}
-            formatter={(value, entry: any) => (
+            formatter={(value) => (
               <span style={{ color: "#0F4C5C", fontSize: "14px" }}>
                 {value}
               </span>

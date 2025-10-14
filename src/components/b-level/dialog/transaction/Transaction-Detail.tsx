@@ -3,14 +3,12 @@ import { useDialogStore } from "../../../../Store/DialogStore";
 import type { Transaction } from "../../../a-level/Transaction/types";
 import DetailItem from "../../../c-level/DetailItem";
 
-const TransactionDetail: React.FC = () => {
-  const { closeDialog, dialogData } = useDialogStore();
+interface TransactionDetailProps {
+  transaction: Transaction;
+}
 
-  if (!dialogData) {
-    return null;
-  }
-
-  const transaction = dialogData as Transaction;
+const TransactionDetail: React.FC<TransactionDetailProps> = ({ transaction }) => {
+  const { closeDialog } = useDialogStore();
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);

@@ -1,7 +1,5 @@
 import * as Yup from "yup"; // ✅ works with Vite + ESM
 
-const passwordRules = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{6,}$/;
-
 export const signupSchema = Yup.object().shape({
   email: Yup.string().email("Please enter a valid email").required("Required"),
   name: Yup.string().min(3).required("Required"),

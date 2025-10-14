@@ -1,4 +1,3 @@
-import React from "react";
 import AmountItem from "../components/b-level/Amount-item";
 import ExpenseBarChart from "../components/a-level/BarChart/Bar-Chart";
 import ExpenseLineChart from "../components/a-level/LineChart/Line-Chart";

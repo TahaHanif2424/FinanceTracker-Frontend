@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { sidebar_item } from "../../../utils/constants";
 import Tooltip from "../../c-level/Tooltip";
