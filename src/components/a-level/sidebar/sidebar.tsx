@@ -8,11 +8,11 @@ import {
   X,
   LayoutDashboard,
   Receipt,
-  DollarSign,
   Users,
   FileBarChart,
   Settings,
   LogOut,
+  UserPlus,
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -31,10 +31,10 @@ export default function Sidebar() {
         return <LayoutDashboard className="w-5 h-5" />;
       case "transactions":
         return <Receipt className="w-5 h-5" />;
-      case "expenses":
-        return <DollarSign className="w-5 h-5" />;
+      case "friends":
+        return <UserPlus className="w-5 h-5" />; // 👈 changed icon
       case "groups":
-        return <Users className="w-5 h-5" />;
+        return <Users className="w-5 h-5" />; // 👈 changed icon
       case "reports":
         return <FileBarChart className="w-5 h-5" />;
       case "settings":

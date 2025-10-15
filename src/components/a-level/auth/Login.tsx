@@ -45,7 +45,7 @@ export default function Login({ changeMode }: AuthProp) {
       <div className="relative z-10">
         {/* header */}
         <h2 className="text-xl font-semibold text-center text-career-darkGreen mb-8">
-          Loginn
+          Login
         </h2>
 
         {/* form */}

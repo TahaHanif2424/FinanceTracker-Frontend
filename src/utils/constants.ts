@@ -1,6 +1,6 @@
 export const sidebar_item = [
   { name: "Dashboard", link: "/dashboard", placement: "top" },
-  { name: "Expenses", link: "/expenses", placement: "top" },
+  { name: "Friends", link: "/friends", placement: "top" },
   { name: "Transactions", link: "/transactions", placement: "top" },
   { name: "Groups", link: "/groups", placement: "top" },
   { name: "Reports", link: "/reports", placement: "top" },

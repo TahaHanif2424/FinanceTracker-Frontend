@@ -7,7 +7,9 @@ interface TransactionDetailProps {
   transaction: Transaction;
 }
 
-const TransactionDetail: React.FC<TransactionDetailProps> = ({ transaction }) => {
+const TransactionDetail: React.FC<TransactionDetailProps> = ({
+  transaction,
+}) => {
   const { closeDialog } = useDialogStore();
 
   const formatDate = (dateString: string) => {

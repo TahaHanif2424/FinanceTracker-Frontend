@@ -9,82 +9,7 @@ import { CONTENT_HEIGHT } from "../utils/constants";
 import { useDialogStore } from "../Store/DialogStore";
 import useBalance from "../components/b-level/Balance/useBalance";
 import useIncome from "../components/b-level/Income/useIncome";
-
-// Sample transaction data for dashboard
-const recentTransactions = [
-  {
-    id: "1",
-    name: "Grocery Store",
-    date: "2024-03-15",
-    time: "10:30 AM",
-    amount: 125.5,
-    type: "EXPENSE" as const,
-    icon: "🛒",
-  },
-  {
-    id: "2",
-    name: "Salary Deposit",
-    date: "2024-03-14",
-    time: "09:00 AM",
-    amount: 3500.0,
-    type: "INCOME" as const,
-    icon: "💵",
-  },
-  {
-    id: "3",
-    name: "Coffee Shop",
-    date: "2024-03-14",
-    time: "03:45 PM",
-    amount: 4.5,
-    type: "EXPENSE" as const,
-    icon: "☕",
-  },
-  {
-    id: "4",
-    name: "Electric Bill",
-    date: "2024-03-13",
-    time: "02:15 PM",
-    amount: 89.99,
-    type: "EXPENSE" as const,
-    icon: "⚡",
-  },
-  {
-    id: "5",
-    name: "Electric Bill",
-    date: "2024-03-13",
-    time: "02:15 PM",
-    amount: 89.99,
-    type: "EXPENSE" as const,
-    icon: "⚡",
-  },
-  {
-    id: "6",
-    name: "Electric Bill",
-    date: "2024-03-13",
-    time: "02:15 PM",
-    amount: 89.99,
-    type: "EXPENSE" as const,
-    icon: "⚡",
-  },
-  {
-    id: "7",
-    name: "Electric Bill",
-    date: "2024-03-13",
-    time: "02:15 PM",
-    amount: 89.99,
-    type: "EXPENSE" as const,
-    icon: "⚡",
-  },
-  {
-    id: "8",
-    name: "Electric Bill",
-    date: "2024-03-13",
-    time: "02:15 PM",
-    amount: 89.99,
-    type: "EXPENSE" as const,
-    icon: "⚡",
-  },
-];
+import TransactionContainer from "../components/a-level/Transaction/Transaction-container";
 
 // Sample debts and receivables data
 const debtsAndReceivables = [
@@ -234,8 +159,8 @@ export default function Dashboard() {
           </div>
 
           {/* Transaction Section */}
-          <div className="bg-white rounded-xl shadow-md p-4 flex flex-col min-h-0 min-w-0 h-full border border-career-lightGray/20 mr-1">
-            <div className="mb-3 flex items-center justify-between flex-shrink-0">
+          <div className="bg-white rounded-xl shadow-md flex flex-col min-h-0 min-w-0 h-full border border-career-lightGray/20 mr-1">
+            <div className="flex items-center justify-between flex-shrink-0 px-4 pt-4">
               <h2 className="text-xl font-semibold text-career-darkGreen">
                 Recent Transactions
               </h2>
@@ -244,18 +169,7 @@ export default function Dashboard() {
               </button>
             </div>
             <div className="flex-1 min-h-0 min-w-0 overflow-y-auto space-y-3">
-              {recentTransactions.map((transaction) => (
-                <TransactionItem
-                  id={transaction.id}
-                  key={transaction.id}
-                  amount={transaction.amount}
-                  date={transaction.date}
-                  icon={transaction.icon}
-                  name={transaction.name}
-                  time={transaction.time}
-                  type={transaction.type}
-                />
-              ))}
+              <TransactionContainer showHeader={false} />
             </div>
           </div>
         </div>

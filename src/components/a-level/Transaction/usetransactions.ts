@@ -29,11 +29,14 @@ export default function useTransaction() {
 
       // Remove emoji icon from category (everything before and including the space)
       const cleanCategory = values.category.split(" ").slice(1).join(" ");
-
+      const type = values.type.toUpperCase() as "INCOME" | "EXPENSE";
+      if (type === "EXPENSE") {
+        values.amount = -Math.abs(values.amount);
+      }
       const transactionData: Transaction = {
         userId,
         amount: values.amount,
-        type: values.type.toUpperCase() as "INCOME" | "EXPENSE",
+        type: type,
         category: cleanCategory,
         date: combineDateAndTime(values.date, values.time),
         description: values.description,

@@ -106,7 +106,9 @@ const TransactionContainer: React.FC<TransactionContainerProps> = ({
   const formatDateRange = () => {
     if (filteredTransactions.length === 0) return "";
 
-    const dates = filteredTransactions.map((t: Transaction) => new Date(t.fullDate));
+    const dates = filteredTransactions.map(
+      (t: Transaction) => new Date(t.fullDate),
+    );
     const minDate = new Date(Math.min(...dates.map((d: Date) => d.getTime())));
     const maxDate = new Date(Math.max(...dates.map((d: Date) => d.getTime())));
 
