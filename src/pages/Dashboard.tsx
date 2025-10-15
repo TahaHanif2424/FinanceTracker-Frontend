@@ -2,7 +2,6 @@ import AmountItem from "../components/b-level/Amount-item";
 import ExpenseBarChart from "../components/a-level/BarChart/Bar-Chart";
 import ExpenseLineChart from "../components/a-level/LineChart/Line-Chart";
 import ExpensePieChart from "../components/a-level/PieChart/Pie-Chart";
-import TransactionItem from "../components/b-level/Transaction-item";
 import DebtContainer from "../components/a-level/Debt-container";
 import GroupContainer from "../components/a-level/Group-container";
 import { CONTENT_HEIGHT } from "../utils/constants";
