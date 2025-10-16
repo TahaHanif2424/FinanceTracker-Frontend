@@ -3,6 +3,8 @@ import AuthPage from "../pages/AuthPage";
 import AuthenticatedLayout from "../layout/authenticatedLayout";
 import Dashboard from "../pages/Dashboard";
 import Transactions from "../pages/Transactions";
+import Groups from "../pages/Groups";
+import Friends from "../pages/Friends";
 
 const router = createBrowserRouter([
   { path: "/", element: <Navigate to="/dashboard" replace /> },
@@ -13,8 +15,8 @@ const router = createBrowserRouter([
     children: [
       { path: "dashboard", element: <Dashboard /> },
       { path: "transactions", element: <Transactions /> },
-      { path: "friends", element: <Transactions /> },
-      { path: "groups", element: <div>Groups Page</div> },
+      { path: "friends", element: <Friends /> },
+      { path: "groups", element: <Groups /> },
       { path: "reports", element: <div>Reports Page</div> },
       { path: "settings", element: <div>Settings Page</div> },
     ],
