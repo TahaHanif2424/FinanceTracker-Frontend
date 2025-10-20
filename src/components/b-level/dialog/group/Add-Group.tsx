@@ -48,7 +48,6 @@ const AddGroupDialog: React.FC = () => {
       members: validMembers,
     };
 
-    console.log("Group Data:", groupData);
     // TODO: Add API call to create group
 
     closeDialog();

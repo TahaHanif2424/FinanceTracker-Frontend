@@ -15,12 +15,14 @@ export default function Friends() {
         </div>
 
         {/* 2-Column Grid Layout */}
-        <div className="flex-1 grid grid-cols-2 gap-6 overflow-hidden">
-          {/* Left Column: All Users with Search */}
-          <UserList />
+        <div className="flex-1 overflow-hidden">
+          <div className="grid grid-cols-2 gap-6 h-full">
+            {/* Left Column: All Users with Search */}
+            <UserList />
 
-          {/* Right Column: Your Friends */}
-          <FriendsList />
+            {/* Right Column: Your Friends */}
+            <FriendsList />
+          </div>
         </div>
       </div>
     </div>

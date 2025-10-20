@@ -112,8 +112,6 @@ export default function Groups() {
   };
 
   const handleGroupClick = (groupId: string) => {
-    // Handle group card click - navigate to group details
-    console.log("Group clicked:", groupId);
   };
 
   return (
