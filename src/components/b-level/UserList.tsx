@@ -52,7 +52,7 @@ export default function UserList() {
         onSuccess: () => {
           alert("Friend request accepted!");
         },
-        onError: (error: any) => {
+        onError: (_error: any) => {
           alert("Failed to accept friend request. Please try again.");
         },
       }

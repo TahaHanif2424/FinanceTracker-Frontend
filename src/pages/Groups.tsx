@@ -4,103 +4,17 @@ import { CONTENT_HEIGHT } from "../utils/constants";
 import { useDialogStore } from "../Store/DialogStore";
 
 // Sample groups data
-const sampleGroups = [
-  {
-    id: "1",
-    groupName: "Weekend Trip",
-    groupIcon: "✈️",
-    totalMembers: 5,
-    memberNames: [
-      "John Smith",
-      "Sarah Johnson",
-      "Mike Wilson",
-      "Emily Davis",
-      "Alex Brown",
-    ],
-    totalAmount: 2500.0,
-  },
-  {
-    id: "2",
-    groupName: "Office Lunch",
-    groupIcon: "🍔",
-    totalMembers: 8,
-    memberNames: [
-      "Alice Cooper",
-      "Bob Martin",
-      "Charlie Lee",
-      "Diana Ross",
-      "Emma Watson",
-      "Frank Miller",
-      "Grace Kelly",
-      "Henry Ford",
-    ],
-    totalAmount: 450.0,
-  },
-  {
-    id: "3",
-    groupName: "Birthday Party",
-    groupIcon: "🎉",
-    totalMembers: 12,
-    memberNames: [
-      "Tom Hardy",
-      "Lisa Simpson",
-      "Mark Johnson",
-      "Nancy Drew",
-      "Oscar Wilde",
-      "Paula Dean",
-      "Quinn Taylor",
-      "Rachel Green",
-      "Sam Smith",
-      "Tina Turner",
-      "Uma Thurman",
-      "Victor Hugo",
-    ],
-    totalAmount: 1800.0,
-  },
-  {
-    id: "4",
-    groupName: "Gym Membership",
-    groupIcon: "💪",
-    totalMembers: 4,
-    memberNames: [
-      "Chris Evans",
-      "Dave Bautista",
-      "Eliza Doolittle",
-      "Fred Flintstone",
-    ],
-    totalAmount: 600.0,
-  },
-  {
-    id: "5",
-    groupName: "Book Club",
-    groupIcon: "📚",
-    totalMembers: 6,
-    memberNames: [
-      "George Orwell",
-      "Harper Lee",
-      "Isaac Asimov",
-      "Jane Austen",
-      "Kurt Vonnegut",
-      "Leo Tolstoy",
-    ],
-    totalAmount: 300.0,
-  },
-  {
-    id: "6",
-    groupName: "Movie Night",
-    groupIcon: "🎬",
-    totalMembers: 7,
-    memberNames: [
-      "Martin Scorsese",
-      "Nancy Meyers",
-      "Oliver Stone",
-      "Patty Jenkins",
-      "Quentin Tarantino",
-      "Ridley Scott",
-      "Steven Spielberg",
-    ],
-    totalAmount: 520.0,
-  },
+interface Group {
+  id: string;
+  groupName: string;
+  groupIcon: string;
+  totalMembers: number;
+  memberNames: string[];
+  totalAmount: number;
+}
+
+const sampleGroups: Group[] = [
+
 ];
 
 export default function Groups() {
@@ -111,7 +25,7 @@ export default function Groups() {
     openDialog("add_group");
   };
 
-  const handleGroupClick = (groupId: string) => {
+  const handleGroupClick = (_groupId: string) => {
   };
 
   return (

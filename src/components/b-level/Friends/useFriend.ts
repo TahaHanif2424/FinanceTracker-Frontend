@@ -1,11 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  getAllUsers,
   getNonFriendUsers,
   getFriends,
   sendFriendRequest,
   acceptFriendRequest,
   getPendingRequests,
+  rejectFriendRequest,
 } from "./function";
 import { useDataStore } from "../../../Store/DataStore";
 
@@ -76,6 +76,20 @@ export default function useFriend() {
     },
   });
 
+  // Mutation to reject friend request
+  const rejectFriendRequestMutation = useMutation({
+    mutationFn: ({ friendId }: { friendId: string }) =>
+      rejectFriendRequest(userId || "", friendId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["friends", userId] });
+      queryClient.invalidateQueries({ queryKey: ["nonFriendUsers", userId] });
+      queryClient.invalidateQueries({ queryKey: ["pendingRequests", userId] });
+    },
+    onError: (error: any) => {
+      console.error("Error rejecting friend request:", error);
+    },
+  });
+
   return {
     usersData,
     isLoadingUsers,
@@ -90,5 +104,6 @@ export default function useFriend() {
     refetchPendingRequests,
     sendFriendRequestMutation,
     acceptFriendRequestMutation,
+    rejectFriendRequestMutation,
   };
 }

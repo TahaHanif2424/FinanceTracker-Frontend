@@ -1,73 +1,89 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDialogStore } from "../../../../Store/DialogStore";
 import Button from "../../../c-level/Button";
 import Input from "../../../c-level/Input";
-import TextArea from "../../../c-level/TextArea";
-import { X, Plus, Trash2 } from "lucide-react";
+import { X, UserPlus, Trash2, Check, Loader2 } from "lucide-react";
+import useGroup from "./useGroup";
+import useFriend from "../../Friends/useFriend";
 
 const AddGroupDialog: React.FC = () => {
   const { closeDialog } = useDialogStore();
+  const {
+    groupName,
+    setGroupName,
+    selectedMembers,
+    setSelectedMembers,
+    handleCreateGroup,
+    isLoading,
+    isSuccess,
+  } = useGroup();
 
-  const [groupName, setGroupName] = useState("");
-  const [groupIcon, setGroupIcon] = useState("");
-  const [description, setDescription] = useState("");
-  const [members, setMembers] = useState<{ name: string; email: string }[]>([
-    { name: "", email: "" },
-  ]);
+  const { friendsData, isLoadingFriends } = useFriend();
+  const friends = friendsData || [];
 
-  const handleAddMember = () => {
-    setMembers([...members, { name: "", email: "" }]);
-  };
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const handleRemoveMember = (index: number) => {
-    if (members.length > 1) {
-      setMembers(members.filter((_, i) => i !== index));
+  // Close dialog on successful group creation
+  useEffect(() => {
+    if (isSuccess) {
+      closeDialog();
     }
-  };
+  }, [isSuccess, closeDialog]);
 
-  const handleMemberChange = (
-    index: number,
-    field: "name" | "email",
-    value: string,
-  ) => {
-    const updatedMembers = [...members];
-    updatedMembers[index][field] = value;
-    setMembers(updatedMembers);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Filter out empty members
-    const validMembers = members.filter((m) => m.name.trim() || m.email.trim());
-
-    const groupData = {
-      groupName,
-      groupIcon,
-      description,
-      members: validMembers,
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.friend-search-container')) {
+        setShowDropdown(false);
+      }
     };
 
-    // TODO: Add API call to create group
+    if (showDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
 
-    closeDialog();
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showDropdown]);
+
+  // Filter friends based on search query and exclude already selected members
+  const filteredFriends = friends.filter((friend: any) => {
+    const isNotSelected = !selectedMembers.includes(friend.id);
+
+    // If no search query, show all non-selected friends
+    if (!searchQuery.trim()) {
+      return isNotSelected;
+    }
+
+    // If there's a search query, filter by name or email
+    const matchesSearch =
+      friend.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      friend.email.toLowerCase().includes(searchQuery.toLowerCase());
+
+    return isNotSelected && matchesSearch;
+  });
+
+  const handleAddMember = (friendId: string) => {
+    setSelectedMembers([...selectedMembers, friendId]);
+    setSearchQuery("");
+    setShowDropdown(false);
   };
 
-  // Popular emoji options for groups
-  const emojiOptions = [
-    "👥",
-    "🎉",
-    "✈️",
-    "🍔",
-    "💪",
-    "📚",
-    "🎬",
-    "🏖️",
-    "🎮",
-    "⚽",
-    "🎵",
-    "🍕",
-  ];
+  const handleRemoveMember = (friendId: string) => {
+    setSelectedMembers(selectedMembers.filter((id) => id !== friendId));
+  };
+
+  const getSelectedFriends = () => {
+    return friends.filter((friend: any) => selectedMembers.includes(friend.id));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await handleCreateGroup();
+  };
 
   return (
     <div
@@ -99,7 +115,7 @@ const AddGroupDialog: React.FC = () => {
           onSubmit={handleSubmit}
           className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]"
         >
-          {/* Group Name and Icon */}
+          {/* Group Name */}
           <div className="mb-6">
             <label className="block text-sm font-semibold text-career-darkGreen mb-3">
               Group Name *
@@ -115,123 +131,127 @@ const AddGroupDialog: React.FC = () => {
             />
           </div>
 
-          {/* Icon Selection */}
-          <div className="mb-6">
-            <label className="block text-sm font-semibold text-career-darkGreen mb-3">
-              Group Icon
-            </label>
-            <div className="grid grid-cols-6 gap-3 mb-3">
-              {emojiOptions.map((emoji) => (
-                <button
-                  key={emoji}
-                  type="button"
-                  onClick={() => setGroupIcon(emoji)}
-                  className={`
-                    p-4 rounded-xl text-2xl transition-all duration-200
-                    ${
-                      groupIcon === emoji
-                        ? "bg-career-darkGreen scale-110 shadow-lg"
-                        : "bg-gray-100 hover:bg-gray-200"
-                    }
-                  `}
-                >
-                  {emoji}
-                </button>
-              ))}
-            </div>
-            <Input
-              type="text"
-              name="customIcon"
-              value={groupIcon}
-              onChange={(e) => setGroupIcon(e.target.value)}
-              placeholder="Or type your own emoji"
-              className="pl-4"
-            />
-          </div>
-
-          {/* Description */}
-          <div className="mb-6">
-            <label className="block text-sm font-semibold text-career-darkGreen mb-2">
-              Description (Optional)
-            </label>
-            <TextArea
-              name="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Add a description for this group..."
-              rows={2}
-            />
-          </div>
-
           {/* Members Section */}
           <div className="mb-6">
-            <div className="flex items-center justify-between mb-3">
-              <label className="block text-sm font-semibold text-career-darkGreen">
-                Members
-              </label>
-              <button
-                type="button"
-                onClick={handleAddMember}
-                className="
-                  flex items-center gap-2 px-4 py-2 rounded-lg
-                  bg-career-darkGreen text-white text-sm font-semibold
-                  hover:bg-career-darkGreen/90 transition-all duration-200
-                "
-              >
-                <Plus className="w-4 h-4" />
-                Add Member
-              </button>
-            </div>
+            <label className="block text-sm font-semibold text-career-darkGreen mb-3">
+              Add Members from Friends
+            </label>
 
-            <div className="space-y-3 max-h-[300px] overflow-y-auto">
-              {members.map((member, index) => (
-                <div
-                  key={index}
-                  className="flex gap-3 items-start bg-gray-50 p-4 rounded-xl border border-gray-200"
-                >
-                  <div className="flex-1 grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-600 mb-1">
-                        Name
-                      </label>
-                      <input
-                        type="text"
-                        value={member.name}
-                        onChange={(e) =>
-                          handleMemberChange(index, "name", e.target.value)
-                        }
-                        placeholder="Member name"
-                        className="w-full px-3 py-2 text-sm border-2 rounded-lg border-career-lightGray hover:border-career-mediumGreen focus:border-career-darkGreen focus:outline-none focus:ring-2 focus:ring-career-mediumGreen/30 transition-all duration-200"
-                      />
+            {/* Friend Search/Dropdown */}
+            <div className="relative mb-4 friend-search-container">
+              <div className="relative">
+                <Input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    if (!showDropdown) setShowDropdown(true);
+                  }}
+                  onFocus={() => setShowDropdown(true)}
+                  onClick={() => setShowDropdown(true)}
+                  placeholder="Search friends to add..."
+                  className="pl-4"
+                />
+                <UserPlus className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              </div>
+
+              {/* Dropdown - Always show when showDropdown is true */}
+              {showDropdown && friends.length >= 0 && (
+                <div className="absolute z-10 w-full mt-2 bg-white border-2 border-career-darkGreen rounded-lg shadow-xl max-h-80 overflow-y-auto">
+                  {isLoadingFriends ? (
+                    <div className="p-6 text-center text-gray-500">
+                      <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2" />
+                      <p className="text-sm font-medium">Loading friends...</p>
                     </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-600 mb-1">
-                        Email
-                      </label>
-                      <input
-                        type="email"
-                        value={member.email}
-                        onChange={(e) =>
-                          handleMemberChange(index, "email", e.target.value)
-                        }
-                        placeholder="member@email.com"
-                        className="w-full px-3 py-2 text-sm border-2 rounded-lg border-career-lightGray hover:border-career-mediumGreen focus:border-career-darkGreen focus:outline-none focus:ring-2 focus:ring-career-mediumGreen/30 transition-all duration-200"
-                      />
+                  ) : filteredFriends.length > 0 ? (
+                    <>
+                      {/* Show count of available friends */}
+                      <div className="sticky top-0 bg-career-darkGreen text-white px-4 py-2 text-sm font-semibold">
+                        {filteredFriends.length} {filteredFriends.length === 1 ? "friend" : "friends"} available
+                      </div>
+
+                      {/* Friend list */}
+                      <div className="divide-y divide-gray-100">
+                        {filteredFriends.map((friend: any) => (
+                          <button
+                            key={friend.id}
+                            type="button"
+                            onClick={() => handleAddMember(friend.id)}
+                            className="w-full px-4 py-3 text-left hover:bg-green-50 transition-all duration-200 group"
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="w-12 h-12 bg-career-darkGreen rounded-full flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform duration-200">
+                                {friend.name.charAt(0).toUpperCase()}
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-semibold text-gray-800 group-hover:text-career-darkGreen transition-colors">
+                                  {friend.name}
+                                </p>
+                                <p className="text-sm text-gray-500">{friend.email}</p>
+                              </div>
+                              <UserPlus className="w-5 h-5 text-gray-400 group-hover:text-career-darkGreen transition-colors" />
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <div className="p-6 text-center text-gray-500">
+                      <UserPlus className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                      <p className="text-sm font-medium">
+                        {friends.length === 0
+                          ? "You don't have any friends yet"
+                          : searchQuery
+                          ? `No friends found matching "${searchQuery}"`
+                          : "All friends have been added"}
+                      </p>
+                      {friends.length === 0 && (
+                        <p className="text-xs text-gray-400 mt-2">
+                          Add friends first from the Friends page!
+                        </p>
+                      )}
                     </div>
-                  </div>
-                  {members.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveMember(index)}
-                      className="mt-6 p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-all duration-200"
-                      title="Remove member"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
                   )}
                 </div>
-              ))}
+              )}
             </div>
+
+            {/* Selected Members */}
+            {getSelectedFriends().length > 0 && (
+              <div className="space-y-2">
+                <p className="text-xs font-semibold text-gray-600 mb-2">
+                  Selected Members ({getSelectedFriends().length})
+                </p>
+                <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                  {getSelectedFriends().map((friend: any) => (
+                    <div
+                      key={friend.id}
+                      className="flex items-center justify-between bg-green-50 p-3 rounded-lg border border-green-200"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-career-darkGreen rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                          {friend.name.charAt(0)}
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-800 text-sm">
+                            {friend.name}
+                          </p>
+                          <p className="text-xs text-gray-500">{friend.email}</p>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveMember(friend.id)}
+                        className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-all duration-200"
+                        title="Remove member"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Action Buttons */}
@@ -239,13 +259,23 @@ const AddGroupDialog: React.FC = () => {
             <button
               type="button"
               onClick={closeDialog}
-              className="flex-1 px-6 py-3 rounded-2xl font-semibold border-2 border-gray-300 text-gray-700 hover:bg-gray-50 transition-all duration-300"
+              disabled={isLoading}
+              className="flex-1 px-6 py-3 rounded-2xl font-semibold border-2 border-gray-300 text-gray-700 hover:bg-gray-50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancel
             </button>
-            <Button type="submit" className="flex-1">
-              <span className="text-lg">✓</span>
-              Create Group
+            <Button type="submit" disabled={isLoading} className="flex-1">
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Creating...
+                </>
+              ) : (
+                <>
+                  <Check className="w-5 h-5" />
+                  Create Group
+                </>
+              )}
             </Button>
           </div>
         </form>

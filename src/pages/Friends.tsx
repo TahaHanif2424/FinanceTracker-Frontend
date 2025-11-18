@@ -1,8 +1,42 @@
+import { useState } from "react";
+import { Users, UserPlus, Inbox } from "lucide-react";
 import { CONTENT_HEIGHT } from "../utils/constants";
-import UserList from "../components/b-level/UserList";
-import FriendsList from "../components/b-level/FriendsList";
+import FriendsTab from "../components/b-level/Friends/FriendsTab";
+import FindUsersTab from "../components/b-level/Friends/FindUsersTab";
+import RequestsTab from "../components/b-level/Friends/RequestsTab";
+import useFriend from "../components/b-level/Friends/useFriend";
+
+type TabType = "friends" | "findUsers" | "requests";
 
 export default function Friends() {
+  const [activeTab, setActiveTab] = useState<TabType>("friends");
+  const { pendingRequestsData } = useFriend();
+  const pendingCount = pendingRequestsData?.length || 0;
+
+  const tabs = [
+    {
+      id: "friends" as TabType,
+      label: "Your Friends",
+      icon: Users,
+      component: FriendsTab,
+    },
+    {
+      id: "findUsers" as TabType,
+      label: "Find Users",
+      icon: UserPlus,
+      component: FindUsersTab,
+    },
+    {
+      id: "requests" as TabType,
+      label: "Friend Requests",
+      icon: Inbox,
+      component: RequestsTab,
+      badge: pendingCount,
+    },
+  ];
+
+  const ActiveComponent = tabs.find((tab) => tab.id === activeTab)?.component;
+
   return (
     <div className="p-6 bg-gray-50" style={{ height: CONTENT_HEIGHT }}>
       <div className="flex flex-col h-full gap-6">
@@ -14,14 +48,37 @@ export default function Friends() {
           </p>
         </div>
 
-        {/* 2-Column Grid Layout */}
-        <div className="flex-1 overflow-hidden">
-          <div className="grid grid-cols-2 gap-6 h-full">
-            {/* Left Column: All Users with Search */}
-            <UserList />
+        {/* Tabbed Interface */}
+        <div className="flex-1 overflow-hidden flex flex-col bg-white rounded-lg shadow-md">
+          {/* Tab Navigation */}
+          <div className="flex border-b border-gray-200">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex-1 flex items-center justify-center gap-2 px-6 py-4 font-medium transition-all duration-200 relative ${
+                    activeTab === tab.id
+                      ? "text-career-darkGreen border-b-2 border-career-darkGreen bg-green-50"
+                      : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span>{tab.label}</span>
+                  {tab.badge !== undefined && tab.badge > 0 && (
+                    <span className="ml-1 px-2 py-0.5 text-xs font-bold text-white bg-red-500 rounded-full">
+                      {tab.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
 
-            {/* Right Column: Your Friends */}
-            <FriendsList />
+          {/* Tab Content */}
+          <div className="flex-1 overflow-hidden">
+            {ActiveComponent && <ActiveComponent />}
           </div>
         </div>
       </div>

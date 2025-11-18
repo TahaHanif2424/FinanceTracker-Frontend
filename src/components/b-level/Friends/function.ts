@@ -32,6 +32,7 @@ export const getFriends = async (userId: string) => {
 
 export const sendFriendRequest = async (userId: string, friendId: string) => {
   try {
+    console.log("Sending friend request from", userId, "to", friendId);
     const response = await axiosInstance.post("/friends/send-request", {
       senderId: userId,
       receiverId: friendId,
@@ -62,6 +63,19 @@ export const getPendingRequests = async (userId: string) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching pending requests:", error);
+    throw error;
+  }
+};
+
+export const rejectFriendRequest = async (userId: string, friendId: string) => {
+  try {
+    const response = await axiosInstance.post("/friends/reject-request", {
+      senderId: friendId,
+      receiverId: userId,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error rejecting friend request:", error);
     throw error;
   }
 };

@@ -6,6 +6,8 @@ type InputProps = {
   name?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onClick?: (e: React.MouseEvent<HTMLInputElement>) => void;
   placeholder?: string;
   className?: string;
   disabled?: boolean;
@@ -19,6 +21,8 @@ const Input: React.FC<InputProps> = ({
   name,
   onChange,
   onBlur,
+  onFocus,
+  onClick,
   placeholder = "",
   className = "",
   disabled = false,
@@ -42,6 +46,8 @@ const Input: React.FC<InputProps> = ({
       value={value}
       onChange={onChange}
       onBlur={onBlur}
+      onFocus={onFocus}
+      onClick={onClick}
       placeholder={placeholder}
       disabled={disabled}
       className={twMerge(baseClasses, stateClasses, className)}
