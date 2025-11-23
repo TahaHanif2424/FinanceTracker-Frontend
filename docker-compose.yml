@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  frontend:
+    build: ./FINANCETRACKER_FRONTEND
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+  
+  backend:
+    build: ./FINANCETRACKER_BACKEND
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./FINANCETRACKER_BACKEND/.env
+    depends_on:
+      - db
+
+networks:
+  default:
+    driver: bridge
+
+    

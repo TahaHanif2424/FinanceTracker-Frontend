@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createGroup } from "./functions";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createGroup, getGroups, type GroupResponse } from "./functions";
 import { useDataStore } from "../../../../Store/DataStore";
 
 export default function useGroup() {
@@ -9,11 +9,18 @@ export default function useGroup() {
     const [groupName, setGroupName] = useState("");
     const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
 
+    // Query to fetch groups
+    const { data: groupsData, isLoading: isLoadingGroups, isError: isErrorGroups, refetch: refetchGroups } = useQuery<GroupResponse[]>({
+        queryKey: ["groups", userId],
+        queryFn: () => getGroups(userId || ""),
+        enabled: !!userId,
+    });
+
     const createGroupMutation = useMutation({
         mutationFn: (data: { name: string; adminId: string; members: string[] }) =>
             createGroup(data),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["groups"] });
+            queryClient.invalidateQueries({ queryKey: ["groups", userId] });
             setGroupName("");
             setSelectedMembers([]);
         },
@@ -41,6 +48,12 @@ export default function useGroup() {
     };
 
     return {
+        // Groups query results
+        groupsData,
+        isLoadingGroups,
+        isErrorGroups,
+        refetchGroups,
+        // Create group mutation
         groupName,
         setGroupName,
         selectedMembers,

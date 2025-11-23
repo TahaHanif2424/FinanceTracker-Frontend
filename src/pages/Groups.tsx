@@ -1,32 +1,38 @@
 import { Plus } from "lucide-react";
 import GroupCard from "../components/b-level/Group-card";
+import Loader from "../components/c-level/Loader";
 import { CONTENT_HEIGHT } from "../utils/constants";
 import { useDialogStore } from "../Store/DialogStore";
-
-// Sample groups data
-interface Group {
-  id: string;
-  groupName: string;
-  groupIcon: string;
-  totalMembers: number;
-  memberNames: string[];
-  totalAmount: number;
-}
-
-const sampleGroups: Group[] = [
-
-];
+import useGroup from "../components/b-level/dialog/group/useGroup";
+import type { GroupResponse, GroupMember, TransformedGroup } from "../components/b-level/dialog/group/functions";
 
 export default function Groups() {
   const { openDialog } = useDialogStore();
+  const { groupsData, isLoadingGroups, isErrorGroups } = useGroup();
 
   const handleAddGroup = () => {
     // Open dialog to add a new group
     openDialog("add_group");
   };
 
-  const handleGroupClick = (_groupId: string) => {
+  const handleGroupClick = (groupId: string) => {
+    // Find the group to get its name
+    const group = groupsData?.find((g: GroupResponse) => g.id === groupId);
+    // Open group detail dialog
+    openDialog("group_detail", { groupId, groupName: group?.name });
   };
+
+  // Transform backend data to match GroupCard props
+  const transformedGroups: TransformedGroup[] = groupsData?.map((group: GroupResponse) => ({
+    id: group.id,
+    groupName: group.name,
+    groupIcon: group.icon,
+    totalMembers: group.members?.length || 0,
+    memberNames: group.members?.map((member: string | GroupMember) =>
+      typeof member === 'string' ? member : (member.name || member.userName || member.email)
+    ) || [],
+    totalAmount: group.totalAmount,
+  })) || [];
 
   return (
     <div className="p-6 bg-gray-50" style={{ height: CONTENT_HEIGHT }}>
@@ -63,9 +69,27 @@ export default function Groups() {
 
         {/* Groups Grid */}
         <div className="flex-1 overflow-y-auto">
-          {sampleGroups.length > 0 ? (
+          {isLoadingGroups ? (
+            <div className="flex items-center justify-center h-full">
+              <Loader size="lg" text="Loading groups..." />
+            </div>
+          ) : isErrorGroups ? (
+            <div className="flex flex-col items-center justify-center h-full">
+              <div className="text-center">
+                <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-4xl">⚠️</span>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                  Failed to load groups
+                </h3>
+                <p className="text-gray-500 mb-6">
+                  There was an error loading your groups. Please try again later.
+                </p>
+              </div>
+            </div>
+          ) : transformedGroups.length > 0 ? (
             <div className="grid grid-cols-2 gap-6 pb-4">
-              {sampleGroups.map((group) => (
+              {transformedGroups.map((group: TransformedGroup) => (
                 <GroupCard
                   key={group.id}
                   groupName={group.groupName}

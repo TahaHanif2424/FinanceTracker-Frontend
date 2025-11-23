@@ -5,6 +5,8 @@ import AddBalanceDialog from "../b-level/dialog/balance/Add-Balance";
 import AddIncomeDialog from "../b-level/dialog/income/Add-Income";
 import ConfirmDialog from "../b-level/dialog/ConfirmDialog";
 import AddGroupDialog from "../b-level/dialog/group/Add-Group";
+import GroupDetailDialog from "../b-level/dialog/group/Group-Detail";
+import AddMemberDialog from "../b-level/dialog/group/Add-Member";
 
 export default function Dialog() {
   const dialog = useDialogStore();
@@ -22,6 +24,10 @@ export default function Dialog() {
       return <AddIncomeDialog />;
     case "add_group":
       return <AddGroupDialog />;
+    case "group_detail":
+      return <GroupDetailDialog />;
+    case "add_member":
+      return <AddMemberDialog />;
     case "confirm_delete":
       return (
         <ConfirmDialog

@@ -32,7 +32,6 @@ export const getFriends = async (userId: string) => {
 
 export const sendFriendRequest = async (userId: string, friendId: string) => {
   try {
-    console.log("Sending friend request from", userId, "to", friendId);
     const response = await axiosInstance.post("/friends/send-request", {
       senderId: userId,
       receiverId: friendId,
