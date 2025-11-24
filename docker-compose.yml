@@ -1,14 +1,19 @@
 version: '3.8'
+
 services:
   frontend:
     build: ./FINANCETRACKER_FRONTEND
+    volumes:
+      - /mnt/c/Users/tahah/OneDrive/Desktop/FinanceTracker-Frontend:/app
     ports:
       - "5173:5173"
     depends_on:
       - backend
-  
+
   backend:
     build: ./FINANCETRACKER_BACKEND
+    volumes:
+      - /mnt/c/Users/tahah/OneDrive/Desktop/FinanceTracker-Backend:/app
     ports:
       - "8080:8080"
     env_file:
@@ -19,5 +24,3 @@ services:
 networks:
   default:
     driver: bridge
-
-    
