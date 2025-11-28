@@ -96,8 +96,7 @@ const TransactionDetail: React.FC<TransactionDetailProps> = ({
                 <div
                   className={`text-2xl font-bold ${isExpense ? "text-red-600" : "text-green-600"}`}
                 >
-                  {isExpense ? "-" : "+"}$
-                  {transaction.amount ? transaction.amount.toFixed(2) : "0.00"}
+                  {isExpense ? "-" : "+"}Rs {transaction.amount ? transaction.amount.toFixed(2) : "0.00"}
                 </div>
               }
             />

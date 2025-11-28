@@ -7,6 +7,7 @@ import ConfirmDialog from "../b-level/dialog/ConfirmDialog";
 import AddGroupDialog from "../b-level/dialog/group/Add-Group";
 import GroupDetailDialog from "../b-level/dialog/group/Group-Detail";
 import AddMemberDialog from "../b-level/dialog/group/Add-Member";
+import GroupExpensesDialog from "../b-level/dialog/group/Group-Expenses";
 
 export default function Dialog() {
   const dialog = useDialogStore();
@@ -28,6 +29,8 @@ export default function Dialog() {
       return <GroupDetailDialog />;
     case "add_member":
       return <AddMemberDialog />;
+    case "group_expenses":
+      return <GroupExpensesDialog />;
     case "confirm_delete":
       return (
         <ConfirmDialog

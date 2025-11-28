@@ -5,6 +5,7 @@ services:
     build: ./FINANCETRACKER_FRONTEND
     volumes:
       - /mnt/c/Users/tahah/OneDrive/Desktop/FinanceTracker-Frontend:/app
+      - /app/node_modules
     ports:
       - "5173:5173"
     depends_on:
@@ -17,7 +18,7 @@ services:
     ports:
       - "8080:8080"
     env_file:
-      - ./FINANCETRACKER_BACKEND/.env
+      - /mnt/c/Users/tahah/OneDrive/Desktop/FINANCETRACKER_BACKEND/.env
     depends_on:
       - db
 

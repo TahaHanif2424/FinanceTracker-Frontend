@@ -82,3 +82,18 @@ export const addMembersToGroup = async (request: AddMemberRequest) => {
     });
     return response.data;
 }
+
+export const updateMemberExpense = async (
+    groupId: string,
+    userId: string,
+    owes: number,
+    gets: number
+) => {
+    const response = await axiosInstance.put(`/groups/update`, {
+        groupId,
+        userId,
+        owes,
+        gets
+    });
+    return response.data;
+}

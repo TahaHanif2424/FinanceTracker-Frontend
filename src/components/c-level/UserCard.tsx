@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Mail, DollarSign } from "lucide-react";
+import { Mail } from "lucide-react";
 
 interface UserCardProps {
   id: string;
@@ -52,7 +52,7 @@ export default function UserCard({
           {showBalance && balance !== undefined && (
             <div className="mt-2 flex items-center gap-4">
               <div className="flex items-center gap-1">
-                <DollarSign className="w-4 h-4 text-gray-400" />
+                <span className="w-4 h-4 text-gray-400 text-xs font-medium">Rs</span>
                 <span
                   className={`text-sm font-medium ${
                     balance > 0
@@ -63,9 +63,9 @@ export default function UserCard({
                   }`}
                 >
                   {balance > 0
-                    ? `Owes you $${Math.abs(balance).toFixed(2)}`
+                    ? `Owes you Rs ${Math.abs(balance).toFixed(2)}`
                     : balance < 0
-                      ? `You owe $${Math.abs(balance).toFixed(2)}`
+                      ? `You owe Rs ${Math.abs(balance).toFixed(2)}`
                       : "Settled up"}
                 </span>
               </div>

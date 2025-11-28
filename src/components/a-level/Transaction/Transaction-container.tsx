@@ -25,11 +25,13 @@ type TransactionContainerProps = {
   transactions?: Transaction[];
   className?: string;
   showHeader?: boolean;
+  showActions?: boolean;
 };
 
 const TransactionContainer: React.FC<TransactionContainerProps> = ({
   className = "",
   showHeader = true,
+  showActions = true,
 }) => {
   const { data, isLoading } = useTransaction();
   const { openDialog } = useDialogStore();
@@ -233,6 +235,7 @@ const TransactionContainer: React.FC<TransactionContainerProps> = ({
               type={transaction.type}
               description={transaction.description}
               fullDate={transaction.fullDate}
+              showActions={showActions}
             />
           ))
         ) : (

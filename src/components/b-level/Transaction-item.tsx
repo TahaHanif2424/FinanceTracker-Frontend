@@ -16,6 +16,7 @@ type TransactionItemProps = {
   className?: string;
   description?: string;
   fullDate?: string;
+  showActions?: boolean;
 };
 
 const TransactionItem: React.FC<TransactionItemProps> = ({
@@ -29,6 +30,7 @@ const TransactionItem: React.FC<TransactionItemProps> = ({
   className = "",
   description = "",
   fullDate,
+  showActions = true,
 }) => {
   const isExpense = type === "EXPENSE";
   const dialog = useDialogStore();
@@ -123,25 +125,27 @@ const TransactionItem: React.FC<TransactionItemProps> = ({
         </p>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-1">
-          {/* Edit Button */}
-          <button
-            onClick={handleEdit}
-            className="p-2 rounded-lg bg-career-lightGreen hover:bg-career-mediumGreen/20 text-career-darkGreen transition-all duration-200 hover:scale-110"
-            title="Edit transaction"
-          >
-            <Pencil className="w-4 h-4" />
-          </button>
+        {showActions && (
+          <div className="flex items-center gap-1">
+            {/* Edit Button */}
+            <button
+              onClick={handleEdit}
+              className="p-2 rounded-lg bg-career-lightGreen hover:bg-career-mediumGreen/20 text-career-darkGreen transition-all duration-200 hover:scale-110"
+              title="Edit transaction"
+            >
+              <Pencil className="w-4 h-4" />
+            </button>
 
-          {/* Delete Button */}
-          <button
-            onClick={handleDelete}
-            className="p-2 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition-all duration-200 hover:scale-110"
-            title="Delete transaction"
-          >
-            <Trash2 className="w-4 h-4" />
-          </button>
-        </div>
+            {/* Delete Button */}
+            <button
+              onClick={handleDelete}
+              className="p-2 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition-all duration-200 hover:scale-110"
+              title="Delete transaction"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

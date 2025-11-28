@@ -46,7 +46,7 @@ const AmountItem: React.FC<AmountItemProps> = ({
       className={`
         bg-white
         rounded-xl
-        p-4
+        p-3 md:p-4
         shadow-md
         hover:shadow-lg
         transition-all
@@ -54,9 +54,6 @@ const AmountItem: React.FC<AmountItemProps> = ({
         ease-in-out
         hover:-translate-y-1
         border border-career-lightGray/20
-        flex-1
-        min-w-[200px]
-        max-w-[280px]
         min-h-0
         flex
         flex-col
@@ -85,12 +82,10 @@ const AmountItem: React.FC<AmountItemProps> = ({
         </h3>
         <p className="text-xl font-bold text-career-darkGreen">
           {typeof amount === "number"
-            ? new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
+            ? `Rs ${new Intl.NumberFormat("en-PK", {
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0,
-              }).format(amount)
+              }).format(amount)}`
             : amount}
         </p>
       </div>

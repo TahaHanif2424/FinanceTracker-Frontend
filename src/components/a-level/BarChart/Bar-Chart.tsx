@@ -7,18 +7,30 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import type { ExpenseChartData } from "./function";
 
-const data = [
-  { name: "Mon", expenses: 400 },
-  { name: "Tue", expenses: 300 },
-  { name: "Wed", expenses: 500 },
-  { name: "Thur", expenses: 200 },
-  { name: "Fri", expenses: 100 },
-  { name: "Sat", expenses: 250 },
-  { name: "Sun", expenses: 350 },
-];
+interface ExpenseBarChartProps {
+  data?: ExpenseChartData[];
+  isLoading?: boolean;
+}
 
-export default function ExpenseBarChart() {
+export default function ExpenseBarChart({ data, isLoading }: ExpenseBarChartProps) {
+  if (isLoading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <span className="text-career-darkGreen">Loading...</span>
+      </div>
+    );
+  }
+
+  if (!data || data.length === 0) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <span className="text-gray-500">No expense data available</span>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full h-full">
       <ResponsiveContainer width="100%" height="100%">
@@ -28,7 +40,7 @@ export default function ExpenseBarChart() {
         >
           <CartesianGrid strokeDasharray="3 3" stroke="#E5E5E5" opacity={0.5} />
           <XAxis
-            dataKey="name"
+            dataKey="day"
             stroke="#0F4C5C"
             tick={{ fill: "#0F4C5C", fontSize: 12 }}
             axisLine={{ stroke: "#0F4C5C" }}
@@ -50,7 +62,7 @@ export default function ExpenseBarChart() {
             cursor={{ fill: "rgba(15, 76, 92, 0.05)" }}
           />
           <Bar
-            dataKey="expenses"
+            dataKey="expense"
             fill="#0F4C5C"
             radius={[8, 8, 0, 0]}
             maxBarSize={60}

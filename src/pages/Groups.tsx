@@ -1,4 +1,5 @@
 import { Plus } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import GroupCard from "../components/b-level/Group-card";
 import Loader from "../components/c-level/Loader";
 import { CONTENT_HEIGHT } from "../utils/constants";
@@ -9,6 +10,9 @@ import type { GroupResponse, GroupMember, TransformedGroup } from "../components
 export default function Groups() {
   const { openDialog } = useDialogStore();
   const { groupsData, isLoadingGroups, isErrorGroups } = useGroup();
+
+  const [orderedGroups, setOrderedGroups] = useState<TransformedGroup[]>([]);
+  const initialOrderRef = useRef<string[]>([]);
 
   const handleAddGroup = () => {
     // Open dialog to add a new group
@@ -33,6 +37,34 @@ export default function Groups() {
     ) || [],
     totalAmount: group.totalAmount,
   })) || [];
+
+  // Maintain original order when data updates
+  useEffect(() => {
+    if (transformedGroups.length > 0) {
+      if (initialOrderRef.current.length === 0) {
+        // First load - store the initial order
+        initialOrderRef.current = transformedGroups.map((g) => g.id);
+        setOrderedGroups(transformedGroups);
+      } else {
+        // Subsequent updates - maintain original order, add new groups at end
+        const sorted = [...transformedGroups].sort((a, b) => {
+          const indexA = initialOrderRef.current.indexOf(a.id);
+          const indexB = initialOrderRef.current.indexOf(b.id);
+          if (indexA === -1) return 1;
+          if (indexB === -1) return -1;
+          return indexA - indexB;
+        });
+        // Update initial order to include any new groups
+        const newGroupIds = transformedGroups
+          .map((g) => g.id)
+          .filter((id) => !initialOrderRef.current.includes(id));
+        initialOrderRef.current = [...initialOrderRef.current, ...newGroupIds];
+        setOrderedGroups(sorted);
+      }
+    } else {
+      setOrderedGroups([]);
+    }
+  }, [groupsData]);
 
   return (
     <div className="p-6 bg-gray-50" style={{ height: CONTENT_HEIGHT }}>
